@@ -1,4 +1,5 @@
-Genel Bilgi
+AuthApi Projesi – Dokümantasyon
+1. Proje Genel Bilgileri
 
 Proje Adı: AuthApi
 
@@ -8,29 +9,17 @@ Tip: Web API
 
 Amaç: Kullanıcı ve yönetici yetkilendirmesi ile güvenli oturum yönetimi
 
-Kullanılan Teknolojiler ve Yapılar
+2. Kullanılan Teknolojiler
 
-JWT Authentication (Json Web Token)
+JWT Authentication:
+Kullanıcı girişinde JWT oluşturulur ve istemciye gönderilir. Token, sonraki isteklerde yetkilendirme için kullanılır.
 
-Kullanıcı girişinde JWT oluşturulur ve istemciye gönderilir.
+ASP.NET Core Identity:
+Kullanıcı ve yönetici yönetimi için kullanılır. Kayıt, giriş, şifre yönetimi ve roller Identity üzerinden kontrol edilir.
 
-İstemci, sonraki isteklerde token’ı kullanarak yetkilendirilir.
-
-Token ile stateless authentication sağlanır.
-
-ASP.NET Core Identity
-
-Kullanıcı ve yönetici (admin) yönetimi için kullanılır.
-
-Kullanıcı kayıt, giriş, şifre yönetimi gibi işlemler Identity üzerinden yürütülür.
-
-Rollere dayalı yetkilendirme uygulanır (User, Admin gibi).
-
-Role-Based Authorization
-
-API içinde endpoint’ler kullanıcı tipine göre korunur.
-
-Örneğin:
+Role-Based Authorization:
+Kullanıcı tipine göre endpoint erişimi kontrol edilir.
+Örnek:
 
 [Authorize(Roles = "Admin")]
 [HttpGet("admin/data")]
@@ -41,25 +30,24 @@ public IActionResult GetAdminData() { ... }
 public IActionResult GetUserData() { ... }
 
 
-Controller Yapısı
+Database:
+Kullanıcı ve rol bilgileri Entity Framework Core ile veritabanında tutulur. Identity standart tabloları kullanılır (AspNetUsers, AspNetRoles, AspNetUserRoles).
 
-AdminController: Yöneticiye özel operasyonlar.
+3. Controller Yapısı
 
-UserController: Normal kullanıcı işlemleri.
+AdminController: Yöneticiye özel operasyonlar
 
-Token Management
+UserController: Normal kullanıcı işlemleri
 
-Girişte JWT token oluşturulur, süresi ve claim’ler belirlenir.
+4. Token Yönetimi
 
-Token doğrulama middleware üzerinden kontrol edilir.
+Giriş sırasında JWT oluşturulur.
 
-Database
+Token süresi ve claim bilgileri belirlenir.
 
-Kullanıcı ve rol bilgileri muhtemelen Entity Framework Core ile bir veritabanında tutulur.
+Middleware üzerinden doğrulama ve yetkilendirme sağlanır.
 
-Identity ile standart tablolar kullanılır (AspNetUsers, AspNetRoles, AspNetUserRoles vb.).
-
-Örnek Kullanım Akışı
+5. Kullanım Akışı
 
 Kullanıcı /login endpoint’ine kimlik bilgileri ile istek gönderir.
 
@@ -70,3 +58,9 @@ Kullanıcı token’ı alır ve sonraki isteklerde Authorization: Bearer <token>
 API middleware token’ı doğrular ve yetki kontrolünü yapar.
 
 Kullanıcı rolüne göre ilgili endpoint’lere erişim sağlanır.
+
+6. Örnek Endpointler
+Endpoint	Yetki	Açıklama
+/admin/data	Admin	Yöneticiye özel veri
+/user/data	User	Kullanıcıya özel veri
+/login	Public	Kullanıcı girişi ve JWT oluşturma
